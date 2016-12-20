@@ -426,7 +426,15 @@ namespace Renci.SshNet.Sftp
                     var data = _session.RequestRead(_handle, (ulong)_position, (uint)_readBufferSize);
 
                     _bufferLen = data.Length;
-                    Buffer.BlockCopy(data, 0, _readBuffer, 0, _readBufferSize);
+
+                    int size = _readBufferSize;
+                    if (_bufferLen < size)
+                    {
+                        size = _bufferLen;
+                    }
+
+                    Buffer.BlockCopy(data, 0, _readBuffer, 0, size);
+
                     _serverFilePosition = (ulong)_position;
 
                     if (_bufferLen == 0)
